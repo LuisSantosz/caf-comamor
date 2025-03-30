@@ -114,16 +114,26 @@
         };
 
         function atualizarTotal() {
-            let total = 0;
-            document.querySelectorAll(".quantidade").forEach(input => {
-                let preco = parseFloat(input.dataset.preco);
-                let quantidade = parseInt(input.value) || 0;
-                let subtotal = quantidade * preco;
-                document.getElementById(`subtotal-${input.dataset.id}`).innerText = subtotal.toFixed(2);
-                total += subtotal;
-            });
-            document.getElementById("total").innerText = total.toFixed(2);
+    let total = 0;
+    document.querySelectorAll(".quantidade").forEach(input => {
+        let preco = parseFloat(input.dataset.preco);
+        let quantidade = parseInt(input.value) || 0;
+        let subtotal = quantidade * preco;
+        let subtotalElement = document.getElementById(`subtotal-${input.dataset.id}`);
+        
+        subtotalElement.innerText = subtotal.toFixed(2);
+        total += subtotal;
+
+        // Alterar cor do subtotal caso a quantidade seja maior que 0
+        if (quantidade > 0) {
+            subtotalElement.style.backgroundColor = "lightgreen";
+        } else {
+            subtotalElement.style.backgroundColor = "transparent";
         }
+    });
+    document.getElementById("total").innerText = total.toFixed(2);
+}
+
 
         function alterarQuantidade(id, delta) {
             let input = document.getElementById(id);
@@ -162,10 +172,14 @@
         }
 
         function limparPedido() {
-            document.querySelectorAll(".quantidade").forEach(input => input.value = 0);
-            document.querySelectorAll("[id^='subtotal']").forEach(subtotal => subtotal.innerText = "0.00");
-            document.getElementById("total").innerText = "0.00";
-        }
+    document.querySelectorAll(".quantidade").forEach(input => input.value = 0);
+    document.querySelectorAll("[id^='subtotal']").forEach(subtotal => {
+        subtotal.innerText = "0.00";
+        subtotal.style.backgroundColor = "transparent"; // Remove a cor verde
+    });
+    document.getElementById("total").innerText = "0.00";
+}
+
 
         carregarItens();
     </script>
