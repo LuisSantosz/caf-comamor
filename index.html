@@ -22,9 +22,30 @@
         th {
             background-color: #f4f4f4;
         }
+        .quantidade-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .quantidade-container button {
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #ddd;
+            border-radius: 5px;
+        }
+        .quantidade-container button:hover {
+            background-color: #ccc;
+        }
         input[type="number"] {
-            width: 60px;
+            width: 50px;
             text-align: center;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
         }
         button {
             margin-top: 20px;
@@ -37,7 +58,10 @@
                 font-size: 14px;
             }
             input[type="number"] {
-                width: 50px;
+                width: 40px;
+            }
+            .quantidade-container {
+                gap: 3px;
             }
         }
     </style>
@@ -50,7 +74,6 @@
 
     <script>
         const categorias = {
-
             "Salgados": [
                 { nome: "Bolo pão de queijo", preco: 4.00 },
                 { nome: "Cuscuz com ovos", preco: 5.00 },
@@ -63,13 +86,11 @@
                 { nome: "Pão de queijo (Unidade)", preco: 2.00 },
                 { nome: "Pão na chapa", preco: 3.00 },
             ],
-
             "Doces": [
                 { nome: "Bolo c/ cobertura", preco: 5.00 },
                 { nome: "Bolo simples/milho/mandioca", preco: 4.00 },
                 { nome: "Bolo de tapioca", preco: 5.00 },
             ],
-            
             "Bebidas": [
                 { nome: "Água", preco: 3.00 },
                 { nome: "Café", preco: 4.00 },
@@ -79,7 +100,6 @@
                 { nome: "Refrigerante (Copo 200ml)", preco: 3.00 },
                 { nome: "Suco (Copo 200ml)", preco: 3.00 }
             ],
-            
         };
 
         function atualizarTotal() {
@@ -94,6 +114,14 @@
             document.getElementById("total").innerText = total.toFixed(2);
         }
 
+        function alterarQuantidade(id, delta) {
+            let input = document.getElementById(id);
+            let valorAtual = parseInt(input.value) || 0;
+            let novoValor = Math.max(0, valorAtual + delta);
+            input.value = novoValor;
+            atualizarTotal();
+        }
+
         function carregarItens() {
             let container = document.getElementById("pedido-container");
             Object.keys(categorias).forEach(categoria => {
@@ -103,12 +131,18 @@
 
                 let tbody = document.getElementById(`body-${categoria}`);
                 categorias[categoria].forEach((item, index) => {
-                    let tr = document.createElement("tr");
                     let id = `${categoria}-${index}`;
+                    let tr = document.createElement("tr");
                     tr.innerHTML = `
                         <td>${item.nome}</td>
                         <td>${item.preco.toFixed(2)}</td>
-                        <td><input type="number" class="quantidade" min="0" value="0" data-id="${id}" data-preco="${item.preco}" onchange="atualizarTotal()"></td>
+                        <td>
+                            <div class="quantidade-container">
+                                <button onclick="alterarQuantidade('quantidade-${id}', -1)">-</button>
+                                <input type="number" id="quantidade-${id}" class="quantidade" min="0" value="0" data-id="${id}" data-preco="${item.preco}" onchange="atualizarTotal()">
+                                <button onclick="alterarQuantidade('quantidade-${id}', 1)">+</button>
+                            </div>
+                        </td>
                         <td id="subtotal-${id}">0.00</td>
                     `;
                     tbody.appendChild(tr);
