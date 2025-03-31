@@ -26,7 +26,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
+            gap: 10px;
         }
         .quantidade-container button {
             width: 35px;
@@ -40,13 +40,14 @@
         .quantidade-container button:hover {
             background-color: #ccc;
         }
-        input[type="number"] {
-            width: 60px;
-            height: 30px;
+        .quantidade {
+            width: 50px;
+            height: 35px;
+            line-height: 35px;
             text-align: center;
-            border: 1px solid #ccc;
+            border: 1px solid #000;
+            background-color: #fff;
             border-radius: 5px;
-            font-size: 16px;
         }
         .comanda {
             margin-top: 20px;
@@ -58,6 +59,19 @@
         .subtotal-verde {
             background-color: lightgreen;
         }
+        .botao-limpar {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .botao-limpar:hover {
+            background-color: darkred;
+        }
     </style>
 </head>
 <body>
@@ -68,55 +82,55 @@
         <ul id="comanda-lista"></ul>
     </div>
     <h3>Total: R$ <span id="total">0.00</span></h3>
-    <button onclick="limparPedido()">Limpar Pedido</button>
+    <button class="botao-limpar" onclick="limparPedido()">LIMPAR PEDIDO</button>
 
     <script>
         const categorias = {
-            "Salgados": [
-                { nome: "Bolo pão de queijo", preco: 4.00 },
-                { nome: "Cuscuz com ovos", preco: 5.00 },
-                { nome: "Misto quente", preco: 8.00 },
-                { nome: "Coxinha", preco: 8.00 },
-                { nome: "Torta", preco: 8.00 },
-                { nome: "Pão de batata", preco: 8.00 },
-                { nome: "Pão c/ manteiga", preco: 3.00 },
-                { nome: "Pão c/ ovo", preco: 5.00 },
-                { nome: "Pão de queijo (Unidade)", preco: 2.00 },
-                { nome: "Pão na chapa", preco: 3.00 },
-                
-            ],
-            "Doces": [
-                { nome: "Bolo c/ cobertura", preco: 5.00 },
-                { nome: "Bolo simples", preco: 4.00 },
-                { nome: "Bolo de tapioca", preco: 5.00 },
-            ],
-            "Bebidas": [
-                { nome: "Água", preco: 3.00 },
-                { nome: "Café", preco: 4.00 },
-                { nome: "Café c/ leite", preco: 4.00 },
-                { nome: "Chá", preco: 2.00 },
-                { nome: "Chocolate quente", preco: 4.00 },
-                { nome: "Refrigerante (Copo 200ml)", preco: 3.00 },
-                { nome: "Suco (Copo 200ml)", preco: 3.00 },
-            ],
+           "Salgados": [
+{ nome: "Bolo pão de queijo", preco: 4.00 },
+{ nome: "Cuscuz com ovos", preco: 5.00 },
+{ nome: "Misto quente", preco: 8.00 },
+{ nome: "Coxinha", preco: 8.00 },
+{ nome: "Torta", preco: 8.00 },
+{ nome: "Pão de batata", preco: 8.00 },
+{ nome: "Pão c/ manteiga", preco: 3.00 },
+{ nome: "Pão c/ ovo", preco: 5.00 },
+{ nome: "Pão de queijo (Unidade)", preco: 2.00 },
+{ nome: "Pão na chapa", preco: 3.00 },
+
+],
+"Doces": [
+{ nome: "Bolo c/ cobertura", preco: 5.00 },
+{ nome: "Bolo simples", preco: 4.00 },
+{ nome: "Bolo de tapioca", preco: 5.00 },
+],
+"Bebidas": [
+{ nome: "Água", preco: 3.00 },
+{ nome: "Café", preco: 4.00 },
+{ nome: "Café c/ leite", preco: 4.00 },
+{ nome: "Chá", preco: 2.00 },
+{ nome: "Chocolate quente", preco: 4.00 },
+{ nome: "Refrigerante (Copo 200ml)", preco: 3.00 },
+{ nome: "Suco (Copo 200ml)", preco: 3.00 },
+],
         };
 
         function atualizarTotal() {
             let total = 0;
             let comandaLista = document.getElementById("comanda-lista");
             comandaLista.innerHTML = "";
-            document.querySelectorAll(".quantidade").forEach(input => {
-                let preco = parseFloat(input.dataset.preco);
-                let quantidade = parseInt(input.value) || 0;
+            document.querySelectorAll(".quantidade").forEach(span => {
+                let preco = parseFloat(span.dataset.preco);
+                let quantidade = parseInt(span.innerText) || 0;
                 let subtotal = quantidade * preco;
-                let subtotalElement = document.getElementById(`subtotal-${input.dataset.id}`);
+                let subtotalElement = document.getElementById(`subtotal-${span.dataset.id}`);
                 subtotalElement.innerText = subtotal.toFixed(2);
                 total += subtotal;
                 
                 if (quantidade > 0) {
                     subtotalElement.classList.add("subtotal-verde");
                     let fichas = calcularFichas(preco * quantidade);
-                    comandaLista.innerHTML += `<li>${input.dataset.nome} - fichas: ${fichas}</li>`;
+                    comandaLista.innerHTML += `<li>${span.dataset.nome} - fichas: ${fichas}</li>`;
                 } else {
                     subtotalElement.classList.remove("subtotal-verde");
                 }
@@ -126,7 +140,7 @@
 
         function calcularFichas(valor) {
             let fichas = [];
-            let valores = [5, 4, 2, 1];
+            let valores = [5, 4, 3, 2, 1];
             for (let val of valores) {
                 while (valor >= val) {
                     fichas.push(val);
@@ -137,10 +151,10 @@
         }
 
         function alterarQuantidade(id, delta) {
-            let input = document.getElementById(id);
-            let valorAtual = parseInt(input.value) || 0;
+            let span = document.getElementById(id);
+            let valorAtual = parseInt(span.innerText) || 0;
             let novoValor = Math.max(0, valorAtual + delta);
-            input.value = novoValor;
+            span.innerText = novoValor;
             atualizarTotal();
         }
 
@@ -160,7 +174,7 @@
                         <td>
                             <div class="quantidade-container">
                                 <button onclick="alterarQuantidade('quantidade-${id}', -1)">-</button>
-                                <input type="number" id="quantidade-${id}" class="quantidade" min="0" value="0" data-id="${id}" data-preco="${item.preco}" data-nome="${item.nome}" onchange="atualizarTotal()">
+                                <span id="quantidade-${id}" class="quantidade" data-id="${id}" data-preco="${item.preco}" data-nome="${item.nome}">0</span>
                                 <button onclick="alterarQuantidade('quantidade-${id}', 1)">+</button>
                             </div>
                         </td>
@@ -172,7 +186,7 @@
         }
 
         function limparPedido() {
-            document.querySelectorAll(".quantidade").forEach(input => input.value = 0);
+            document.querySelectorAll(".quantidade").forEach(span => span.innerText = "0");
             document.querySelectorAll("[id^='subtotal']").forEach(subtotal => {
                 subtotal.innerText = "0.00";
                 subtotal.classList.remove("subtotal-verde");

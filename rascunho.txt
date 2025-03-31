@@ -1,0 +1,27 @@
+"Salgados": [
+{ nome: "Bolo pão de queijo", preco: 4.00 },
+{ nome: "Cuscuz com ovos", preco: 5.00 },
+{ nome: "Misto quente", preco: 8.00 },
+{ nome: "Coxinha", preco: 8.00 },
+{ nome: "Torta", preco: 8.00 },
+{ nome: "Pão de batata", preco: 8.00 },
+{ nome: "Pão c/ manteiga", preco: 3.00 },
+{ nome: "Pão c/ ovo", preco: 5.00 },
+{ nome: "Pão de queijo (Unidade)", preco: 2.00 },
+{ nome: "Pão na chapa", preco: 3.00 },
+
+],
+"Doces": [
+{ nome: "Bolo c/ cobertura", preco: 5.00 },
+{ nome: "Bolo simples", preco: 4.00 },
+{ nome: "Bolo de tapioca", preco: 5.00 },
+],
+"Bebidas": [
+{ nome: "Água", preco: 3.00 },
+{ nome: "Café", preco: 4.00 },
+{ nome: "Café c/ leite", preco: 4.00 },
+{ nome: "Chá", preco: 2.00 },
+{ nome: "Chocolate quente", preco: 4.00 },
+{ nome: "Refrigerante (Copo 200ml)", preco: 3.00 },
+{ nome: "Suco (Copo 200ml)", preco: 3.00 },
+],
