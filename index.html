@@ -72,6 +72,19 @@
         .botao-limpar:hover {
             background-color: darkred;
         }
+        .botao-suporte {
+            font-size: 18px;
+            padding: 10px 20px;
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .botao-suporte:hover {
+            background-color: darkgreen;
+        }
     </style>
 </head>
 <body>
@@ -83,36 +96,43 @@
     </div>
     <h3>Total: R$ <span id="total">0.00</span></h3>
     <button class="botao-limpar" onclick="limparPedido()">LIMPAR PEDIDO</button>
+    
+    <!-- Espaço entre os botões -->
+    <div style="margin-top: 10px;"></div>
+    
+    <!-- Botão Suporte -->
+    <a href="https://wa.me/5511948038444" target="_blank">
+        <button class="botao-suporte">SUPORTE/CONTATO</button>
+    </a>
 
     <script>
         const categorias = {
-           "Salgados": [
-{ nome: "Bolo pão de queijo", preco: 4.00 },
-{ nome: "Cuscuz com ovos", preco: 5.00 },
-{ nome: "Misto quente", preco: 8.00 },
-{ nome: "Coxinha", preco: 8.00 },
-{ nome: "Torta", preco: 8.00 },
-{ nome: "Pão de batata", preco: 8.00 },
-{ nome: "Pão c/ manteiga", preco: 3.00 },
-{ nome: "Pão c/ ovo", preco: 5.00 },
-{ nome: "Pão de queijo (Unidade)", preco: 2.00 },
-{ nome: "Pão na chapa", preco: 3.00 },
-
-],
-"Doces": [
-{ nome: "Bolo c/ cobertura", preco: 5.00 },
-{ nome: "Bolo simples", preco: 4.00 },
-{ nome: "Bolo de tapioca", preco: 5.00 },
-],
-"Bebidas": [
-{ nome: "Água", preco: 3.00 },
-{ nome: "Café", preco: 4.00 },
-{ nome: "Café c/ leite", preco: 4.00 },
-{ nome: "Chá", preco: 2.00 },
-{ nome: "Chocolate quente", preco: 4.00 },
-{ nome: "Refrigerante (Copo 200ml)", preco: 3.00 },
-{ nome: "Suco (Copo 200ml)", preco: 3.00 },
-],
+           "SALGADOS": [
+                { nome: "Bolo pão de queijo", preco: 4.00 },
+                { nome: "Cuscuz com ovos", preco: 5.00 },
+                { nome: "Misto quente", preco: 8.00 },
+                { nome: "Coxinha", preco: 8.00 },
+                { nome: "Torta", preco: 8.00 },
+                { nome: "Pão de batata", preco: 8.00 },
+                { nome: "Pão c/ manteiga", preco: 3.00 },
+                { nome: "Pão c/ ovo", preco: 5.00 },
+                { nome: "Pão de queijo (Unidade)", preco: 2.00 },
+                { nome: "Pão na chapa", preco: 3.00 },
+           ],
+           "DOCES": [
+                { nome: "Bolo c/ cobertura", preco: 5.00 },
+                { nome: "Bolo simples", preco: 4.00 },
+                { nome: "Bolo de tapioca", preco: 5.00 },
+           ],
+           "BEBIDAS": [
+                { nome: "Água", preco: 3.00 },
+                { nome: "Café", preco: 4.00 },
+                { nome: "Café c/ leite", preco: 4.00 },
+                { nome: "Chá", preco: 2.00 },
+                { nome: "Chocolate quente", preco: 4.00 },
+                { nome: "Refrigerante (Copo 200ml)", preco: 3.00 },
+                { nome: "Suco (Copo 200ml)", preco: 3.00 },
+           ],
         };
 
         function atualizarTotal() {
@@ -140,7 +160,7 @@
 
         function calcularFichas(valor) {
             let fichas = [];
-            let valores = [5, 4, 3, 2, 1];
+            let valores = [5, 4, 2, 1];
             for (let val of valores) {
                 while (valor >= val) {
                     fichas.push(val);
