@@ -41,45 +41,32 @@
             background-color: #ccc;
         }
         input[type="number"] {
-            margin-top: 15px;
-            width: 40px;
+            width: 60px;
             height: 30px;
             text-align: center;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
-            -moz-appearance: textfield;
         }
-        input[type="number"]::-webkit-outer-spin-button,
-        input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        button {
+        .comanda {
             margin-top: 20px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
+            padding: 10px;
+            border: 1px solid black;
+            display: inline-block;
+            text-align: left;
         }
-        @media (max-width: 600px) {
-            table, th, td {
-                font-size: 14px;
-            }
-            input[type="number"] {
-                width: 50px;
-                height: 30px;
-            }
-            .quantidade-container button {
-                width: 30px;
-                height: 30px;
-                font-size: 16px;
-            }
+        .subtotal-verde {
+            background-color: lightgreen;
         }
     </style>
 </head>
 <body>
     <h2>CAFÉ COM AMOR - CALCULADORA</h2>
     <div id="pedido-container"></div>
+    <div class="comanda" id="comanda">
+        <h3>COMANDA</h3>
+        <ul id="comanda-lista"></ul>
+    </div>
     <h3>Total: R$ <span id="total">0.00</span></h3>
     <button onclick="limparPedido()">Limpar Pedido</button>
 
@@ -90,12 +77,13 @@
                 { nome: "Cuscuz com ovos", preco: 5.00 },
                 { nome: "Misto quente", preco: 8.00 },
                 { nome: "Coxinha", preco: 8.00 },
-                { nome: "Pão de batata", preco: 8.00 },
                 { nome: "Torta", preco: 8.00 },
-                { nome: "Pão com manteiga", preco: 3.00 },
-                { nome: "Pão com ovo", preco: 5.00 },
+                { nome: "Pão de batata", preco: 8.00 },
+                { nome: "Pão c/ manteiga", preco: 3.00 },
+                { nome: "Pão c/ ovo", preco: 5.00 },
                 { nome: "Pão de queijo (Unidade)", preco: 2.00 },
                 { nome: "Pão na chapa", preco: 3.00 },
+                
             ],
             "Doces": [
                 { nome: "Bolo c/ cobertura", preco: 5.00 },
@@ -109,31 +97,44 @@
                 { nome: "Chá", preco: 2.00 },
                 { nome: "Chocolate quente", preco: 4.00 },
                 { nome: "Refrigerante (Copo 200ml)", preco: 3.00 },
-                { nome: "Suco (Copo 200ml)", preco: 3.00 }
+                { nome: "Suco (Copo 200ml)", preco: 3.00 },
             ],
         };
 
         function atualizarTotal() {
-    let total = 0;
-    document.querySelectorAll(".quantidade").forEach(input => {
-        let preco = parseFloat(input.dataset.preco);
-        let quantidade = parseInt(input.value) || 0;
-        let subtotal = quantidade * preco;
-        let subtotalElement = document.getElementById(`subtotal-${input.dataset.id}`);
-        
-        subtotalElement.innerText = subtotal.toFixed(2);
-        total += subtotal;
-
-        // Alterar cor do subtotal caso a quantidade seja maior que 0
-        if (quantidade > 0) {
-            subtotalElement.style.backgroundColor = "lightgreen";
-        } else {
-            subtotalElement.style.backgroundColor = "transparent";
+            let total = 0;
+            let comandaLista = document.getElementById("comanda-lista");
+            comandaLista.innerHTML = "";
+            document.querySelectorAll(".quantidade").forEach(input => {
+                let preco = parseFloat(input.dataset.preco);
+                let quantidade = parseInt(input.value) || 0;
+                let subtotal = quantidade * preco;
+                let subtotalElement = document.getElementById(`subtotal-${input.dataset.id}`);
+                subtotalElement.innerText = subtotal.toFixed(2);
+                total += subtotal;
+                
+                if (quantidade > 0) {
+                    subtotalElement.classList.add("subtotal-verde");
+                    let fichas = calcularFichas(preco * quantidade);
+                    comandaLista.innerHTML += `<li>${input.dataset.nome} - fichas: ${fichas}</li>`;
+                } else {
+                    subtotalElement.classList.remove("subtotal-verde");
+                }
+            });
+            document.getElementById("total").innerText = total.toFixed(2);
         }
-    });
-    document.getElementById("total").innerText = total.toFixed(2);
-}
 
+        function calcularFichas(valor) {
+            let fichas = [];
+            let valores = [5, 4, 2, 1];
+            for (let val of valores) {
+                while (valor >= val) {
+                    fichas.push(val);
+                    valor -= val;
+                }
+            }
+            return fichas.join(" + ");
+        }
 
         function alterarQuantidade(id, delta) {
             let input = document.getElementById(id);
@@ -149,7 +150,6 @@
                 let section = document.createElement("div");
                 section.innerHTML = `<h3>${categoria}</h3><table><thead><tr><th>Item</th><th>Preço (R$)</th><th>Quantidade</th><th>Subtotal (R$)</th></tr></thead><tbody id="body-${categoria}"></tbody></table>`;
                 container.appendChild(section);
-
                 let tbody = document.getElementById(`body-${categoria}`);
                 categorias[categoria].forEach((item, index) => {
                     let id = `${categoria}-${index}`;
@@ -160,7 +160,7 @@
                         <td>
                             <div class="quantidade-container">
                                 <button onclick="alterarQuantidade('quantidade-${id}', -1)">-</button>
-                                <input type="number" id="quantidade-${id}" class="quantidade" min="0" value="0" data-id="${id}" data-preco="${item.preco}" onchange="atualizarTotal()">
+                                <input type="number" id="quantidade-${id}" class="quantidade" min="0" value="0" data-id="${id}" data-preco="${item.preco}" data-nome="${item.nome}" onchange="atualizarTotal()">
                                 <button onclick="alterarQuantidade('quantidade-${id}', 1)">+</button>
                             </div>
                         </td>
@@ -172,14 +172,14 @@
         }
 
         function limparPedido() {
-    document.querySelectorAll(".quantidade").forEach(input => input.value = 0);
-    document.querySelectorAll("[id^='subtotal']").forEach(subtotal => {
-        subtotal.innerText = "0.00";
-        subtotal.style.backgroundColor = "transparent"; // Remove a cor verde
-    });
-    document.getElementById("total").innerText = "0.00";
-}
-
+            document.querySelectorAll(".quantidade").forEach(input => input.value = 0);
+            document.querySelectorAll("[id^='subtotal']").forEach(subtotal => {
+                subtotal.innerText = "0.00";
+                subtotal.classList.remove("subtotal-verde");
+            });
+            document.getElementById("comanda-lista").innerHTML = "";
+            document.getElementById("total").innerText = "0.00";
+        }
 
         carregarItens();
     </script>
