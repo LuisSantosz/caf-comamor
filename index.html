@@ -3,111 +3,239 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciador de Pedidos</title>
+    <title>Café com Amor - Calculadora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg: #f2f4f8;
+            --text: #333;
+            --card: #fff;
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --danger: #ef4444;
+        }
+
+        body.dark {
+            --bg: #1a1c1f;
+            --text: #f5f5f5;
+            --card: #2a2d31;
+            --primary: #2563eb;
+            --accent: #059669;
+            --danger: #dc2626;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 10px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1, h2, h3 {
+            color: var(--text);
             text-align: center;
         }
+
+        h2 {
+            margin-bottom: 30px;
+            color: #3b82f6;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
+            margin: 20px 0;
+            background: var(--card);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
+
         th, td {
-            border: 1px solid black;
-            padding: 10px;
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
         }
+
         th {
-            background-color: #f4f4f4;
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
         }
+
+        tr:hover {
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+
         .quantidade-container {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
         }
+
         .quantidade-container button {
             width: 35px;
             height: 35px;
             font-size: 18px;
             cursor: pointer;
             border: none;
-            background-color: #ddd;
-            border-radius: 5px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 6px;
+            transition: background 0.3s;
         }
+
         .quantidade-container button:hover {
-            background-color: #ccc;
+            background-color: #2563eb;
         }
+
         .quantidade {
             width: 50px;
             height: 35px;
             line-height: 35px;
             text-align: center;
-            border: 1px solid #000;
-            background-color: #fff;
-            border-radius: 5px;
+            background-color: var(--bg);
+            border-radius: 6px;
         }
+
         .comanda {
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid black;
-            display: inline-block;
-            text-align: left;
+            margin: 30px auto;
+            padding: 20px;
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            max-width: 500px;
         }
+
+        .comanda h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .comanda ul {
+            padding-left: 20px;
+        }
+
+        .comanda li {
+            margin-bottom: 8px;
+        }
+
+        .total {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            color: var(--primary);
+        }
+
+        .botoes-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-limpar {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-limpar:hover {
+            background-color: #dc2626;
+        }
+
+        .btn-suporte {
+            background-color: var(--accent);
+            color: white;
+        }
+
+        .btn-suporte:hover {
+            background-color: #059669;
+        }
+
+        .tema-btn {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 999;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
         .subtotal-verde {
-            background-color: lightgreen;
+            background-color: rgba(16, 185, 129, 0.2);
+            font-weight: bold;
+            color: var(--accent);
         }
-        .botao-limpar {
-            font-size: 18px;
-            padding: 10px 20px;
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
+
+        .categoria-section {
+            margin-bottom: 40px;
+            background: var(--card);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
         }
-        .botao-limpar:hover {
-            background-color: darkred;
-        }
-        .botao-suporte {
-            font-size: 18px;
-            padding: 10px 20px;
-            background-color: green;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .botao-suporte:hover {
-            background-color: darkgreen;
+
+        .categoria-section h3 {
+            margin-top: 0;
+            color: var(--primary);
+            text-align: left;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
         }
     </style>
 </head>
 <body>
-    <h2>CAFÉ COM AMOR - CALCULADORA</h2>
-    <div id="pedido-container"></div>
-    <div class="comanda" id="comanda">
-        <h3>COMANDA</h3>
-        <ul id="comanda-lista"></ul>
+    <button class="tema-btn" onclick="alternarTema()" title="Alternar tema">🌙</button>
+    <div class="container">
+        <h2>CAFÉ COM AMOR - CALCULADORA</h2>
+        
+        <div id="pedido-container"></div>
+        
+        <div class="comanda">
+            <h3>COMANDA</h3>
+            <ul id="comanda-lista"></ul>
+        </div>
+        
+        <div class="total">Total: R$ <span id="total">0.00</span></div>
+        
+        <div class="botoes-container">
+            <button class="btn btn-limpar" onclick="limparPedido()">LIMPAR PEDIDO</button>
+            <a href="https://wa.me/5511948038444" target="_blank">
+                <button class="btn btn-suporte">SUPORTE/CONTATO</button>
+            </a>
+        </div>
     </div>
-    <h3>Total: R$ <span id="total">0.00</span></h3>
-    <button class="botao-limpar" onclick="limparPedido()">LIMPAR PEDIDO</button>
-    
-    <!-- Espaço entre os botões -->
-    <div style="margin-top: 10px;"></div>
-    
-    <!-- Botão Suporte -->
-    <a href="https://wa.me/5511948038444" target="_blank">
-        <button class="botao-suporte">SUPORTE/CONTATO</button>
-    </a>
 
     <script>
         const categorias = {
-           "SALGADOS": [
+            "SALGADOS": [
                 { nome: "Bolo pão de queijo", preco: 4.00 },
                 { nome: "Cuscuz com ovos", preco: 5.00 },
                 { nome: "Misto quente", preco: 8.00 },
@@ -118,13 +246,13 @@
                 { nome: "Pão c/ ovo", preco: 5.00 },
                 { nome: "Pão de queijo (Unidade)", preco: 2.00 },
                 { nome: "Pão na chapa", preco: 3.00 },
-           ],
-           "DOCES": [
+            ],
+            "DOCES": [
                 { nome: "Bolo c/ cobertura", preco: 5.00 },
                 { nome: "Bolo simples", preco: 4.00 },
                 { nome: "Bolo de tapioca", preco: 5.00 },
-           ],
-           "BEBIDAS": [
+            ],
+            "BEBIDAS": [
                 { nome: "Água", preco: 3.00 },
                 { nome: "Café", preco: 4.00 },
                 { nome: "Café c/ leite", preco: 4.00 },
@@ -132,7 +260,7 @@
                 { nome: "Chocolate quente", preco: 4.00 },
                 { nome: "Refrigerante (Copo 200ml)", preco: 3.00 },
                 { nome: "Suco (Copo 200ml)", preco: 3.00 },
-           ],
+            ],
         };
 
         function atualizarTotal() {
@@ -182,6 +310,7 @@
             let container = document.getElementById("pedido-container");
             Object.keys(categorias).forEach(categoria => {
                 let section = document.createElement("div");
+                section.className = "categoria-section";
                 section.innerHTML = `<h3>${categoria}</h3><table><thead><tr><th>Item</th><th>Preço (R$)</th><th>Quantidade</th><th>Subtotal (R$)</th></tr></thead><tbody id="body-${categoria}"></tbody></table>`;
                 container.appendChild(section);
                 let tbody = document.getElementById(`body-${categoria}`);
@@ -215,7 +344,21 @@
             document.getElementById("total").innerText = "0.00";
         }
 
-        carregarItens();
+        function alternarTema() {
+            document.body.classList.toggle("dark");
+            const modo = document.body.classList.contains("dark") ? "dark" : "light";
+            localStorage.setItem("tema", modo);
+            document.querySelector(".tema-btn").textContent = modo === "dark" ? "☀️" : "🌙";
+        }
+
+        window.onload = () => {
+            const temaSalvo = localStorage.getItem("tema");
+            if (temaSalvo === "dark") {
+                document.body.classList.add("dark");
+                document.querySelector(".tema-btn").textContent = "☀️";
+            }
+            carregarItens();
+        }
     </script>
 </body>
 </html>
